@@ -179,15 +179,14 @@ packages:
   google_mlkit_commons:
     dependency: "direct main"
     description:
-      name: google_mlkit_commons
-      sha256: "27d626c66a181351a953eba5b6ff1ff123aadb891b4dab085b292118f039d6ac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.1"
+      path: "lib/service/google_mlkit_commons"
+      relative: true
+    source: path
+    version: "0.8.0"
   google_mlkit_pose_detection:
     dependency: "direct main"
     description:
-      path: "example/google_mlkit_pose_detection"
+      path: "lib/service/google_mlkit_pose_detection"
       relative: true
     source: path
     version: "0.12.0"
