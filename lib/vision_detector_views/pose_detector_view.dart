@@ -120,6 +120,10 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
       _text = '';
     });
     final poses = await _poseDetector.processImage(inputImage);
+
+    // Chama a função para imprimir os keypoints
+    _printPoseKeypoints(poses);
+
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
       final painter = PosePainter(
@@ -138,4 +142,16 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
       setState(() {});
     }
   }
+
+ void _printPoseKeypoints(List<Pose> poses) {
+  for (final pose in poses) {
+    pose.landmarks.forEach((type, landmark) {
+      print('Landmark ${type.toString()}: '
+          'x=${landmark.x.toStringAsFixed(2)}, '
+          'y=${landmark.y.toStringAsFixed(2)}, '
+          'z=${landmark.z.toStringAsFixed(2)}, '
+          'confidence=${landmark.likelihood.toStringAsFixed(2)}');
+    });
+  }
+}
 }

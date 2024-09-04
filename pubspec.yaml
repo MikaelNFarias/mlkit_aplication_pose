@@ -38,10 +38,10 @@ dependencies:
   sensors_plus: ^5.0.1
 
   google_mlkit_commons:
-#    path: ../google_mlkit_commons
+    path: ./lib/service/google_mlkit_commons
   
   google_mlkit_pose_detection:
-    path: ./example/google_mlkit_pose_detection
+    path: ./lib/service/google_mlkit_pose_detection
 
 dev_dependencies:
   flutter_test:
