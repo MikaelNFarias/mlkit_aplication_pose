@@ -6,42 +6,60 @@ class PoseDetector {
   static const MethodChannel _channel =
       MethodChannel('google_mlkit_pose_detector');
 
-  /// The options for the pose detector.
   final PoseDetectorOptions options;
-
-  /// Instance id.
   final id = DateTime.now().microsecondsSinceEpoch.toString();
 
-  /// Constructor to create an instance of [PoseDetector].
   PoseDetector({required this.options});
 
-  /// Processes the given [InputImage] for pose detection.
-  /// It returns a list of [Pose].
-  Future<List<Pose>> processImage(InputImage inputImage) async {
+Future<List<Pose>> processImage(InputImage inputImage) async {
+  // Verifica se o metadata não é nulo
+  if (inputImage.metadata != null) {
+    // Obtendo a largura e altura do frame da imagem
+    final double frameWidth = inputImage.metadata!.size.width;
+    final double frameHeight = inputImage.metadata!.size.height;
+
     final result = await _channel.invokeMethod(
-        'vision#startPoseDetector', <String, dynamic>{
-      'options': options.toJson(),
-      'id': id,
-      'imageData': inputImage.toJson()
-    });
+      'vision#startPoseDetector',
+      <String, dynamic>{
+        'options': options.toJson(),
+        'id': id,
+        'imageData': inputImage.toJson()
+      },
+    );
 
     final List<Pose> poses = [];
     for (final pose in result) {
       final Map<PoseLandmarkType, PoseLandmark> landmarks = {};
       for (final point in pose) {
         final landmark = PoseLandmark.fromJson(point);
-        landmarks[landmark.type] = landmark;
+
+        // Normalizando as coordenadas x e y em relação ao tamanho da imagem
+        final normalizedX = landmark.x / frameHeight;
+        final normalizedY = landmark.y / frameWidth;
+
+        // Criando um novo landmark com as coordenadas normalizadas
+        final normalizedLandmark = PoseLandmark(
+          type: landmark.type,
+          x: normalizedX,
+          y: normalizedY,
+          z: landmark.z, // Mantém a coordenada z não normalizada
+          likelihood: landmark.likelihood,
+        );
+
+        landmarks[normalizedLandmark.type] = normalizedLandmark;
       }
       poses.add(Pose(landmarks: landmarks));
     }
 
     return poses;
+  } else {
+    throw Exception('InputImage metadata is null. Cannot access image size.');
   }
-
-  /// Closes the detector and releases its resources.
-  Future<void> close() =>
-      _channel.invokeMethod('vision#closePoseDetector', {'id': id});
 }
+
+  Future<void> close() => _channel.invokeMethod('vision#closePoseDetector', {'id': id});
+}
+
 
 /// Determines the parameters on which [PoseDetector] works.
 class PoseDetectorOptions {

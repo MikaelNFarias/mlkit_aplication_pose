@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "mlkit_aplication_pose",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "mlkit_aplication_pose (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "mlkit_aplication_pose (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "google_mlkit_commons",
+            "cwd": "lib\\service\\google_mlkit_commons",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "google_mlkit_commons (profile mode)",
+            "cwd": "lib\\service\\google_mlkit_commons",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "google_mlkit_commons (release mode)",
+            "cwd": "lib\\service\\google_mlkit_commons",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "google_mlkit_pose_detection",
+            "cwd": "lib\\service\\google_mlkit_pose_detection",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "google_mlkit_pose_detection (profile mode)",
+            "cwd": "lib\\service\\google_mlkit_pose_detection",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "google_mlkit_pose_detection (release mode)",
+            "cwd": "lib\\service\\google_mlkit_pose_detection",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

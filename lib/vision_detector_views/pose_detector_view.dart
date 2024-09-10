@@ -1,9 +1,6 @@
-import 'dart:math';  // Adiciona esta importação para usar funções matemáticas
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import 'package:sensors_plus/sensors_plus.dart';
 
 import 'detector_view.dart';
 import '../painters/pose_painter.dart';
@@ -14,34 +11,12 @@ class PoseDetectorView extends StatefulWidget {
 }
 
 class _PoseDetectorViewState extends State<PoseDetectorView> {
-  final PoseDetector _poseDetector =
-      PoseDetector(options: PoseDetectorOptions());
+  final PoseDetector _poseDetector = PoseDetector(options: PoseDetectorOptions());
   bool _canProcess = true;
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
   var _cameraLensDirection = CameraLensDirection.back;
-  AccelerometerEvent? _accelerometerEvent;
-  DateTime? _lastAccelerometerUpdate;
-  int? _lastInterval;
-
-  @override
-  void initState() {
-    super.initState();
-    accelerometerEvents.listen((event) {
-      final now = DateTime.now();
-      if (_lastAccelerometerUpdate != null) {
-        final interval = now.difference(_lastAccelerometerUpdate!);
-        setState(() {
-          _lastInterval = interval.inMilliseconds;
-        });
-      }
-      _lastAccelerometerUpdate = now;
-      setState(() {
-        _accelerometerEvent = event;
-      });
-    });
-  }
 
   @override
   void dispose() async {
@@ -66,50 +41,9 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) => _cameraLensDirection = value,
           ),
-          Positioned(
-            bottom: 80,  // Ajuste para deixar espaço acima da barra deslizante
-            left: 16,
-            child: _buildAccelerometerData(),
-          ),
         ],
       ),
     );
-  }
-
-  Widget _buildAccelerometerData() {
-    if (_accelerometerEvent == null) {
-      return Text(
-        'Acelerômetro: Carregando...',
-        style: TextStyle(fontSize: 16, color: Colors.white),
-      );
-    }
-
-    final x = _accelerometerEvent!.x.toStringAsFixed(2);
-    final y = _accelerometerEvent!.y.toStringAsFixed(2);
-    final z = _accelerometerEvent!.z.toStringAsFixed(2);
-    final inclinationX = _calculateInclinationX().toStringAsFixed(2);
-    final inclinationY = _calculateInclinationY().toStringAsFixed(2);
-    final interval = _lastInterval != null ? '${_lastInterval} ms' : 'N/A';
-
-    return Text(
-      'Acelerômetro:\nX: $x, Y: $y, Z: $z\n'
-      'Inclinação X (Retrato): $inclinationX°\n'
-      'Inclinação Y (Paisagem): $inclinationY°\n'
-      'Intervalo: $interval',
-      style: TextStyle(fontSize: 16, color: Colors.white),
-    );
-  }
-
-  double _calculateInclinationX() {
-    if (_accelerometerEvent == null) return 0.0;
-    final angle = atan2(_accelerometerEvent!.y, _accelerometerEvent!.z);
-    return angle * 180 / pi;
-  }
-
-  double _calculateInclinationY() {
-    if (_accelerometerEvent == null) return 0.0;
-    final angle = atan2(_accelerometerEvent!.x, _accelerometerEvent!.z);
-    return angle * 180 / pi;
   }
 
   Future<void> _processImage(InputImage inputImage) async {
@@ -143,15 +77,15 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     }
   }
 
- void _printPoseKeypoints(List<Pose> poses) {
-  for (final pose in poses) {
-    pose.landmarks.forEach((type, landmark) {
-      print('Landmark ${type.toString()}: '
-          'x=${landmark.x.toStringAsFixed(2)}, '
-          'y=${landmark.y.toStringAsFixed(2)}, '
-          'z=${landmark.z.toStringAsFixed(2)}, '
-          'confidence=${landmark.likelihood.toStringAsFixed(2)}');
-    });
+  void _printPoseKeypoints(List<Pose> poses) {
+    for (final pose in poses) {
+      pose.landmarks.forEach((type, landmark) {
+        print('Landmark ${type.toString()}: '
+            'x=${landmark.x.toStringAsFixed(2)}, '
+            'y=${landmark.y.toStringAsFixed(2)}, '
+            'z=${landmark.z.toStringAsFixed(2)}, '
+            'confidence=${landmark.likelihood.toStringAsFixed(2)}');
+      });
+    }
   }
-}
 }
